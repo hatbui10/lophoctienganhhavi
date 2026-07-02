@@ -21,10 +21,32 @@
         }
         h3 {
             text-align: center;
-            margin: 5px 0;
+            margin: 5px 0 2px 0;
             font-size: 13px;
             color: #1a365d;
         }
+        
+        /* Phong cách cho ô tìm kiếm số điện thoại ở trên cùng */
+        .search-box-container {
+            padding: 4px;
+            background-color: #f1f5f9;
+            margin-bottom: 4px;
+            border-bottom: 1px solid #cbd5e1;
+        }
+        .search-input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 6px;
+            font-size: 12px;
+            border: 1px solid #94a3b8;
+            border-radius: 4px;
+            outline: none;
+        }
+        .search-input:focus {
+            border-color: #3b82f6;
+            background-color: #fff;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -49,13 +71,11 @@
         .text-center {
             text-align: center;
         }
-        /* Cập nhật lại tỷ lệ % các cột cho cân đối với số điện thoại */
         .stt-col { width: 8%; }
         .name-col { width: 31%; }
-        .phone-col { width: 32%; } /* Tăng nhẹ để chứa đủ số điện thoại */
+        .phone-col { width: 32%; }
         .note-col { width: 29%; }
         
-        /* Nút gọi chứa cả icon và số điện thoại */
         .btn-call {
             display: block;
             background-color: #22c55e;
@@ -63,16 +83,10 @@
             text-decoration: none;
             padding: 4px 1px;
             border-radius: 3px;
-            font-size: 10.5px; /* Giảm nhẹ cỡ chữ số điện thoại để không bị xuống dòng */
+            font-size: 10.5px;
             font-weight: bold;
             text-align: center;
-            white-space: nowrap; /* Giữ số điện thoại thẳng hàng */
-        }
-        .btn-call:active {
-            background-color: #16a34a;
-        }
-        .student-name {
-            font-weight: 500;
+            white-space: nowrap;
         }
         .select-note {
             width: 100%;
@@ -88,6 +102,11 @@
 
 <div class="container">
     <h3>Danh Sách Lớp</h3>
+    
+    <div class="search-box-container">
+        <input type="tel" id="phoneSearch" class="search-input" placeholder="Nhập số điện thoại (VD: 6 số cuối) để tìm..." onkeyup="filterPhone()">
+    </div>
+
     <table>
         <thead>
             <tr>
@@ -99,27 +118,27 @@
         </thead>
         <tbody id="student-list">
             
-            <tr>
+            <tr class="student-row">
                 <td class="text-center">1</td>
                 <td class="student-name">Nguyễn Văn A</td>
                 <td class="text-center">
-                    <a href="tel:0901234567" class="btn-call">📞 0901234567</a>
+                    <a href="tel:0901234567" class="btn-call" data-phone="0901234567">📞 0901234567</a>
                 </td>
                 <td><select class="select-note" onchange="checkNote(this)"></select></td>
             </tr>
-            <tr>
+            <tr class="student-row">
                 <td class="text-center">2</td>
                 <td class="student-name">Trần Thị B</td>
                 <td class="text-center">
-                    <a href="tel:0912345678" class="btn-call">📞 0912345678</a>
+                    <a href="tel:0912345678" class="btn-call" data-phone="0912345678">📞 0912345678</a>
                 </td>
                 <td><select class="select-note" onchange="checkNote(this)"></select></td>
             </tr>
-            <tr>
+            <tr class="student-row">
                 <td class="text-center">3</td>
                 <td class="student-name">Lê Hoàng C</td>
                 <td class="text-center">
-                    <a href="tel:0983456789" class="btn-call">📞 0983456789</a>
+                    <a href="tel:0983456789" class="btn-call" data-phone="0983456789">📞 0983456789</a>
                 </td>
                 <td><select class="select-note" onchange="checkNote(this)"></select></td>
             </tr>
@@ -129,7 +148,7 @@
 </div>
 
 <script>
-// Menu ghi chú dùng chung (Tự động nạp vào mọi học sinh mới)
+// Menu ghi chú dùng chung
 const noteOptions = [
     { value: "", text: "-- Chọn --" },
     { value: "nghi", text: "Nghỉ hết tháng 7" },
@@ -137,6 +156,28 @@ const noteOptions = [
     { value: "di-hoc", text: "Đi học đầy đủ" },
     { value: "chu-y", text: "Cần chú ý" }
 ];
+
+// Hàm lọc tìm kiếm số điện thoại đuôi
+function filterPhone() {
+    // Lấy giá trị người dùng nhập vào và xóa bỏ các khoảng trắng thừa
+    const keyword = document.getElementById('phoneSearch').value.trim();
+    const rows = document.querySelectorAll('.student-row');
+
+    rows.forEach(row => {
+        // Tìm thẻ chứa số điện thoại bên trong dòng này
+        const phoneAnchor = row.querySelector('.btn-call');
+        if (phoneAnchor) {
+            const phoneNumber = phoneAnchor.getAttribute('data-phone');
+            
+            // Kiểm tra xem số điện thoại thực tế có chứa/hoặc kết thúc bằng chuỗi vừa nhập không
+            if (phoneNumber.includes(keyword)) {
+                row.style.display = ""; // Hiện lại dòng nếu khớp
+            } else {
+                row.style.display = "none"; // Ẩn dòng đi nếu không khớp
+            }
+        }
+    });
+}
 
 function initDropdowns() {
     const dropdowns = document.querySelectorAll('.select-note');
