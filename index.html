@@ -116,38 +116,21 @@
                 <th class="note-col">Ghi chú</th>
             </tr>
         </thead>
-        <tbody id="student-list">
-            
-            <tr class="student-row">
-                <td class="text-center">1</td>
-                <td class="student-name">Nguyễn Văn A</td>
-                <td class="text-center">
-                    <a href="tel:0901234567" class="btn-call" data-phone="0901234567">📞 0901234567</a>
-                </td>
-                <td><select class="select-note" onchange="checkNote(this)"></select></td>
-            </tr>
-            <tr class="student-row">
-                <td class="text-center">2</td>
-                <td class="student-name">Trần Thị B</td>
-                <td class="text-center">
-                    <a href="tel:0912345678" class="btn-call" data-phone="0912345678">📞 0912345678</a>
-                </td>
-                <td><select class="select-note" onchange="checkNote(this)"></select></td>
-            </tr>
-            <tr class="student-row">
-                <td class="text-center">3</td>
-                <td class="student-name">Lê Hoàng C</td>
-                <td class="text-center">
-                    <a href="tel:0983456789" class="btn-call" data-phone="0983456789">📞 0983456789</a>
-                </td>
-                <td><select class="select-note" onchange="checkNote(this)"></select></td>
-            </tr>
-
-        </tbody>
+        <tbody id="student-list"></tbody>
     </table>
 </div>
 
 <script>
+// --- 1. KHAI BÁO DANH SÁCH HỌC SINH TẠI ĐÂY ---
+// Bạn có thể dễ dàng thêm, sửa, xóa học sinh trong mảng này
+const students = [
+    { name: "Nguyễn Văn A", phone: "0901234567" },
+    { name: "Trần Thị B", phone: "0912345678" },
+    { name: "Lê Hoàng C", phone: "0983456789" },
+    { name: "Phạm Minh D", phone: "0977666555" },
+    { name: "Hoàng Hoàng E", phone: "0933222111" }
+];
+
 // Menu ghi chú dùng chung
 const noteOptions = [
     { value: "", text: "-- Chọn --" },
@@ -157,42 +140,59 @@ const noteOptions = [
     { value: "chu-y", text: "Cần chú ý" }
 ];
 
+// Hàm khởi tạo và hiển thị danh sách học sinh ra bảng HTML
+function initStudentList() {
+    const tbody = document.getElementById('student-list');
+    tbody.innerHTML = ""; // Xóa dữ liệu cũ nếu có
+
+    students.forEach((student, index) => {
+        // Tạo thẻ tr cho từng học sinh
+        const row = document.createElement('tr');
+        row.className = "student-row";
+
+        // Tạo chuỗi HTML cho danh sách lựa chọn ghi chú (dropdown)
+        let optionsHTML = "";
+        noteOptions.forEach(opt => {
+            optionsHTML += `<option value="${opt.value}">${opt.text}</option>`;
+        });
+
+        // Đổ cấu trúc cột vào dòng
+        row.innerHTML = `
+            <td class="text-center">${index + 1}</td>
+            <td class="student-name">${student.name}</td>
+            <td class="text-center">
+                <a href="tel:${student.phone}" class="btn-call" data-phone="${student.phone}">📞 ${student.phone}</a>
+            </td>
+            <td>
+                <select class="select-note" onchange="checkNote(this)">
+                    ${optionsHTML}
+                </select>
+            </td>
+        `;
+        
+        tbody.appendChild(row);
+    });
+}
+
 // Hàm lọc tìm kiếm số điện thoại đuôi
 function filterPhone() {
-    // Lấy giá trị người dùng nhập vào và xóa bỏ các khoảng trắng thừa
     const keyword = document.getElementById('phoneSearch').value.trim();
     const rows = document.querySelectorAll('.student-row');
 
     rows.forEach(row => {
-        // Tìm thẻ chứa số điện thoại bên trong dòng này
         const phoneAnchor = row.querySelector('.btn-call');
         if (phoneAnchor) {
             const phoneNumber = phoneAnchor.getAttribute('data-phone');
-            
-            // Kiểm tra xem số điện thoại thực tế có chứa/hoặc kết thúc bằng chuỗi vừa nhập không
             if (phoneNumber.includes(keyword)) {
-                row.style.display = ""; // Hiện lại dòng nếu khớp
+                row.style.display = ""; 
             } else {
-                row.style.display = "none"; // Ẩn dòng đi nếu không khớp
+                row.style.display = "none"; 
             }
         }
     });
 }
 
-function initDropdowns() {
-    const dropdowns = document.querySelectorAll('.select-note');
-    dropdowns.forEach(select => {
-        if (select.children.length === 0) {
-            noteOptions.forEach(opt => {
-                const option = document.createElement('option');
-                option.value = opt.value;
-                option.textContent = opt.text;
-                select.appendChild(option);
-            });
-        }
-    });
-}
-
+// Hàm kiểm tra ghi chú để đổi màu nền đỏ nếu nghỉ học
 function checkNote(selectElement) {
     var row = selectElement.closest('tr');
     if (selectElement.value === 'nghi') {
@@ -202,7 +202,8 @@ function checkNote(selectElement) {
     }
 }
 
-window.onload = initDropdowns;
+// Chạy hàm hiển thị danh sách khi trang tải xong
+window.onload = initStudentList;
 </script>
 
 </body>
