@@ -53,6 +53,7 @@
             border: 1px solid #e2e8f0;
             box-shadow: 0 1px 3px rgba(0,0,0,0.02);
             box-sizing: border-box;
+            display: none; /* MẶC ĐỊNH ẨN TẤT CẢ KHI MỚI MỞ TRANG */
         }
         .card-row { margin-bottom: 5px; }
         .card-row:last-child { margin-bottom: 0; }
@@ -82,7 +83,6 @@
         }
         .btn-call:active { background-color: #16a34a; }
         
-        /* Màu nút khi học sinh không có số điện thoại */
         .btn-no-phone {
             background-color: #cbd5e1;
             color: #64748b;
@@ -107,9 +107,6 @@
 </div>
 
 <script>
-// ==========================================
-// KHU VỰC 1: DỮ LIỆU GỐC CỦA BẠN (DẠNG MẢNG ARRAY)
-// ==========================================
 const dataHocSinh = [
     { id: "hs_SKY-KID_01", ten: "Nguyễn An Nhiên (Bơ)", sdt: "0396963955" },
     { id: "hs_SKY-KID_02", ten: "Nguyễn Trung Đức (Bon)", sdt: "0339804981" },
@@ -118,14 +115,13 @@ const dataHocSinh = [
     { id: "hs_SKY-KID_05", ten: "Vũ Nguyễn Hải Anh 23/11/20", sdt: "0336076895" },
     { id: "hs_SKY-KID_06", ten: "Lan Anh em Tuấn Anh B", sdt: "KhôngcóSĐT" },
     { id: "hs_SKY-KID_07", ten: "Đặng Khánh Ngân", sdt: "0942093566" },
-    { id: "hs_SKY-KID_08", ten: "Trần Lê Tuệ Linh", sdt: "0988742202" },
+    { id: "hs_SKY-KID_08", Childhood: "Trần Lê Tuệ Linh", ten: "Trần Lê Tuệ Linh", sdt: "0988742202" },
     { id: "hs_SKY-KID_09", ten: "Nguyễn Trâm Anh", sdt: "0919403848" },
     { id: "hs_SKY-KID_10", ten: "Nguyễn Tú Anh", sdt: "0919403848" },
     { id: "hs_SKY-KID_11", ten: "Nguyễn Hà My", sdt: "0943681990" },
     { id: "hs_SKY-KID_12", ten: "Hoàng Ngọc Phương Linh", sdt: "0912731673" }
 ];
 
-// 2. Dropdown lớp học dùng chung (Dòng 2)
 const classOptions = [
     { value: "", text: "-- Chọn lớp học --" },
     { value: "SKY-KID", text: "Lớp SKY-KID" },
@@ -133,7 +129,6 @@ const classOptions = [
     { value: "11B2", text: "Lớp 11B2" }
 ];
 
-// 3. Dropdown ghi chú dùng chung (Dòng 4)
 const noteOptions = [
     { value: "", text: "-- Chọn ghi chú trạng thái --" },
     { value: "nghi", text: "Nghỉ hết tháng 7" },
@@ -142,7 +137,6 @@ const noteOptions = [
     { value: "chu-y", text: "Cần chú ý đặc biệt" }
 ];
 
-// Hàm tự sinh giao diện dạng Hộp cho 4 dòng đúng cấu trúc data của bạn
 function renderStudents() {
     const listContainer = document.getElementById('student-list');
     let localData = JSON.parse(localStorage.getItem('studentApp_data')) || {};
@@ -150,22 +144,19 @@ function renderStudents() {
     listContainer.innerHTML = "";
     let count = 1;
 
-    // ĐÃ SỬA TẠI ĐÂY: Duyệt trực tiếp qua mảng dataHocSinh thay vì lặp for...in
     dataHocSinh.forEach(student => {
-        const storageId = student.id; // Dùng id gốc làm key localStorage
+        const storageId = student.id; 
         const saved = localData[storageId] || { class: "", note: "" };
 
         const card = document.createElement('div');
         card.className = "student-card";
         card.setAttribute('data-id', storageId);
 
-        // Xử lý nút gọi dựa trên thuộc tính `sdt` của bạn
         let isNoPhone = student.sdt.includes("KhôngcóSĐT") || student.sdt === "";
         let buttonHTML = isNoPhone 
             ? `<span class="btn-call btn-no-phone">🚫 Không có số điện thoại</span>`
             : `<a href="tel:${student.sdt}" class="btn-call" data-phone="${student.sdt}">📞 Gọi: ${student.sdt}</a>`;
 
-        // Giao diện 4 dòng hoàn chỉnh: Tên (Dòng 1) -> Chọn lớp (Dòng 2) -> Gọi (Dòng 3) -> Ghi chú (Dòng 4)
         let cardHTML = `
             <div class="card-row student-name" data-name="${student.ten}">${count}. ${student.ten}</div>
             <div class="card-row">
@@ -186,7 +177,6 @@ function renderStudents() {
         card.innerHTML = cardHTML;
         listContainer.appendChild(card);
 
-        // Đồng bộ lại hiệu ứng màu đỏ nếu dữ liệu cũ ghi nhận là 'nghi'
         const noteSelect = card.querySelector('.select-note');
         if (noteSelect && noteSelect.value === 'nghi') {
             card.classList.add('highlight-red');
@@ -196,7 +186,6 @@ function renderStudents() {
     });
 }
 
-// Lưu trạng thái dropdown vào localStorage
 function saveData(storageId, field, value) {
     let localData = JSON.parse(localStorage.getItem('studentApp_data')) || {};
     if (!localData[storageId]) {
@@ -206,7 +195,6 @@ function saveData(storageId, field, value) {
     localStorage.setItem('studentApp_data', JSON.stringify(localData));
 }
 
-// Kiểm tra bôi đỏ
 function checkNote(selectElement) {
     var card = selectElement.closest('.student-card');
     if (selectElement.value === 'nghi') {
@@ -216,12 +204,19 @@ function checkNote(selectElement) {
     }
 }
 
-// Lọc tìm kiếm Họ tên & Số điện thoại
+// ĐÃ CẬP NHẬT HÀM NÀY: Quản lý ẩn/hiện danh sách theo nội dung ô tìm kiếm
 function filterStudents() {
     const nameKeyword = document.getElementById('nameSearch').value.toLowerCase().trim();
     const phoneKeyword = document.getElementById('phoneSearch').value.trim();
     const cards = document.querySelectorAll('.student-card');
 
+    // Nếu cả hai ô tìm kiếm đều đang trống, ẩn hoàn toàn tất cả các thẻ
+    if (nameKeyword === "" && phoneKeyword === "") {
+        cards.forEach(card => card.style.display = "none");
+        return;
+    }
+
+    // Nếu có nhập nội dung, tiến hành lọc và hiển thị thẻ khớp
     cards.forEach(card => {
         const nameElement = card.querySelector('.student-name');
         const phoneAnchor = card.querySelector('.btn-call[data-phone]');
@@ -233,11 +228,11 @@ function filterStudents() {
             if (phoneAnchor) {
                 isPhoneMatch = phoneAnchor.getAttribute('data-phone').includes(phoneKeyword);
             } else {
-                isPhoneMatch = false;
+                isPhoneMatch = false; // Ẩn học sinh không có số nếu đang gõ số tìm kiếm
             }
         }
 
-        card.style.display = (isNameMatch && isPhoneMatch) ? "" : "none";
+        card.style.display = (isNameMatch && isPhoneMatch) ? "block" : "none";
     });
 }
 
