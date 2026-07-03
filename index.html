@@ -408,7 +408,8 @@ function copyAbsentList() {
     let localData = JSON.parse(localStorage.getItem('studentApp_data')) || {};
     const studentsInClass = dataHocSinh.filter(s => s.lop === selectedClass);
 
-    let textToCopy = `DANH SÁCH VẮNG HỌC - LỚP ${selectedClass.toUpperCase()}\n`;
+    let textToCopy = `DANH SÁCH VẮNG 
+    LỚP ${selectedClass.toUpperCase()}\n`;
     let count = 1;
     let hasAbsent = false;
 
