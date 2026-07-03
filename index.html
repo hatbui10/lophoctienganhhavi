@@ -108,24 +108,22 @@
 
 <script>
 // ==========================================
-// KHU VỰC 1: DỮ LIỆU GỐC CỦA BẠN (DÙNG TEN VÀ SDT)
+// KHU VỰC 1: DỮ LIỆU GỐC CỦA BẠN (DẠNG MẢNG ARRAY)
 // ==========================================
-const dataHocSinh = {
-    "SKY-KID": [
-        { id: "hs_SKY-KID_01", ten: "Nguyễn An Nhiên (Bơ)", sdt: "0396963955" },
-        { id: "hs_SKY-KID_02", ten: "Nguyễn Trung Đức (Bon)", sdt: "0339804981" },
-        { id: "hs_SKY-KID_03", ten: "Đặng Đình Bách", sdt: "0904511462" },
-        { id: "hs_SKY-KID_04", ten: "Lâm Duy Anh", sdt: "0902239258" },
-        { id: "hs_SKY-KID_05", ten: "Vũ Nguyễn Hải Anh 23/11/20", sdt: "0336076895" },
-        { id: "hs_SKY-KID_06", ten: "Lan Anh em Tuấn Anh B", sdt: "KhôngcóSĐT" },
-        { id: "hs_SKY-KID_07", ten: "Đặng Khánh Ngân", sdt: "0942093566" },
-        { id: "hs_SKY-KID_08", ten: "Trần Lê Tuệ Linh", sdt: "0988742202" },
-        { id: "hs_SKY-KID_09", ten: "Nguyễn Trâm Anh", sdt: "0919403848" },
-        { id: "hs_SKY-KID_10", ten: "Nguyễn Tú Anh", sdt: "0919403848" },
-        { id: "hs_SKY-KID_11", ten: "Nguyễn Hà My", sdt: "0943681990" },
-        { id: "hs_SKY-KID_12", ten: "Hoàng Ngọc Phương Linh", sdt: "0912731673" }
-    ]
-};
+const dataHocSinh = [
+    { id: "hs_SKY-KID_01", ten: "Nguyễn An Nhiên (Bơ)", sdt: "0396963955" },
+    { id: "hs_SKY-KID_02", ten: "Nguyễn Trung Đức (Bon)", sdt: "0339804981" },
+    { id: "hs_SKY-KID_03", ten: "Đặng Đình Bách", sdt: "0904511462" },
+    { id: "hs_SKY-KID_04", ten: "Lâm Duy Anh", sdt: "0902239258" },
+    { id: "hs_SKY-KID_05", ten: "Vũ Nguyễn Hải Anh 23/11/20", sdt: "0336076895" },
+    { id: "hs_SKY-KID_06", ten: "Lan Anh em Tuấn Anh B", sdt: "KhôngcóSĐT" },
+    { id: "hs_SKY-KID_07", ten: "Đặng Khánh Ngân", sdt: "0942093566" },
+    { id: "hs_SKY-KID_08", ten: "Trần Lê Tuệ Linh", sdt: "0988742202" },
+    { id: "hs_SKY-KID_09", ten: "Nguyễn Trâm Anh", sdt: "0919403848" },
+    { id: "hs_SKY-KID_10", ten: "Nguyễn Tú Anh", sdt: "0919403848" },
+    { id: "hs_SKY-KID_11", ten: "Nguyễn Hà My", sdt: "0943681990" },
+    { id: "hs_SKY-KID_12", ten: "Hoàng Ngọc Phương Linh", sdt: "0912731673" }
+];
 
 // 2. Dropdown lớp học dùng chung (Dòng 2)
 const classOptions = [
@@ -152,51 +150,50 @@ function renderStudents() {
     listContainer.innerHTML = "";
     let count = 1;
 
-    for (const className in dataHocSinh) {
-        dataHocSinh[className].forEach(student => {
-            const storageId = student.id; // Dùng id gốc (Ví dụ: hs_SKY-KID_01) để làm key localStorage
-            const saved = localData[storageId] || { class: "", note: "" };
+    // ĐÃ SỬA TẠI ĐÂY: Duyệt trực tiếp qua mảng dataHocSinh thay vì lặp for...in
+    dataHocSinh.forEach(student => {
+        const storageId = student.id; // Dùng id gốc làm key localStorage
+        const saved = localData[storageId] || { class: "", note: "" };
 
-            const card = document.createElement('div');
-            card.className = "student-card";
-            card.setAttribute('data-id', storageId);
+        const card = document.createElement('div');
+        card.className = "student-card";
+        card.setAttribute('data-id', storageId);
 
-            // Xử lý nút gọi dựa trên thuộc tính `sdt` của bạn
-            let isNoPhone = student.sdt.includes("KhôngcóSĐT") || student.sdt === "";
-            let buttonHTML = isNoPhone 
-                ? `<span class="btn-call btn-no-phone">🚫 Không có số điện thoại</span>`
-                : `<a href="tel:${student.sdt}" class="btn-call" data-phone="${student.sdt}">📞 Gọi: ${student.sdt}</a>`;
+        // Xử lý nút gọi dựa trên thuộc tính `sdt` của bạn
+        let isNoPhone = student.sdt.includes("KhôngcóSĐT") || student.sdt === "";
+        let buttonHTML = isNoPhone 
+            ? `<span class="btn-call btn-no-phone">🚫 Không có số điện thoại</span>`
+            : `<a href="tel:${student.sdt}" class="btn-call" data-phone="${student.sdt}">📞 Gọi: ${student.sdt}</a>`;
 
-            // Giao diện 4 dòng hoàn chỉnh: Tên (Dòng 1) -> Chọn lớp (Dòng 2) -> Gọi (Dòng 3) -> Ghi chú (Dòng 4)
-            let cardHTML = `
-                <div class="card-row student-name" data-name="${student.ten}">${count}. ${student.ten}</div>
-                <div class="card-row">
-                    <select class="select-box select-class" onchange="saveData('${storageId}', 'class', this.value)">
-                        ${classOptions.map(opt => `<option value="${opt.value}" ${opt.value === saved.class ? 'selected' : ''}>${opt.text}</option>`).join('')}
-                    </select>
-                </div>
-                <div class="card-row">
-                    ${buttonHTML}
-                </div>
-                <div class="card-row">
-                    <select class="select-box select-note" onchange="checkNote(this); saveData('${storageId}', 'note', this.value)">
-                        ${noteOptions.map(opt => `<option value="${opt.value}" ${opt.value === saved.note ? 'selected' : ''}>${opt.text}</option>`).join('')}
-                    </select>
-                </div>
-            `;
+        // Giao diện 4 dòng hoàn chỉnh: Tên (Dòng 1) -> Chọn lớp (Dòng 2) -> Gọi (Dòng 3) -> Ghi chú (Dòng 4)
+        let cardHTML = `
+            <div class="card-row student-name" data-name="${student.ten}">${count}. ${student.ten}</div>
+            <div class="card-row">
+                <select class="select-box select-class" onchange="saveData('${storageId}', 'class', this.value)">
+                    ${classOptions.map(opt => `<option value="${opt.value}" ${opt.value === saved.class ? 'selected' : ''}>${opt.text}</option>`).join('')}
+                </select>
+            </div>
+            <div class="card-row">
+                ${buttonHTML}
+            </div>
+            <div class="card-row">
+                <select class="select-box select-note" onchange="checkNote(this); saveData('${storageId}', 'note', this.value)">
+                    ${noteOptions.map(opt => `<option value="${opt.value}" ${opt.value === saved.note ? 'selected' : ''}>${opt.text}</option>`).join('')}
+                </select>
+            </div>
+        `;
 
-            card.innerHTML = cardHTML;
-            listContainer.appendChild(card);
+        card.innerHTML = cardHTML;
+        listContainer.appendChild(card);
 
-            // Đồng bộ lại hiệu ứng màu đỏ nếu dữ liệu cũ ghi nhận là 'nghi'
-            const noteSelect = card.querySelector('.select-note');
-            if (noteSelect && noteSelect.value === 'nghi') {
-                card.classList.add('highlight-red');
-            }
+        // Đồng bộ lại hiệu ứng màu đỏ nếu dữ liệu cũ ghi nhận là 'nghi'
+        const noteSelect = card.querySelector('.select-note');
+        if (noteSelect && noteSelect.value === 'nghi') {
+            card.classList.add('highlight-red');
+        }
 
-            count++;
-        });
-    }
+        count++;
+    });
 }
 
 // Lưu trạng thái dropdown vào localStorage
