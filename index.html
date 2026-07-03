@@ -218,7 +218,7 @@
     <div id="summaryArea" class="summary-container">
         <div class="summary-header">
             <div class="summary-title" id="summaryClassName">Thống kê lớp: </div>
-            <button type="button" class="btn-copy" id="btnCopy" onclick="copyAbsentList()">📋 Copy danh sách vắng</button>
+            <button type="button" class="btn-copy" id="btnCopy" onclick="copyAbsentList()">📋 Copy báo cáo vắng</button>
         </div>
         
         <div class="stats-grid">
@@ -400,7 +400,7 @@ function updateSummaryTable() {
     }
 }
 
-// Hàm thực hiện chức năng Copy nội dung danh sách vắng
+// ĐÃ CẬP NHẬT: Hàm copy tích hợp cả thông số sĩ số tổng, đi học, vắng
 function copyAbsentList() {
     const selectedClass = document.getElementById('classFilter').value;
     if (!selectedClass) return;
@@ -408,33 +408,45 @@ function copyAbsentList() {
     let localData = JSON.parse(localStorage.getItem('studentApp_data')) || {};
     const studentsInClass = dataHocSinh.filter(s => s.lop === selectedClass);
 
-    let textToCopy = `DANH SÁCH VẮNG 
-    LỚP ${selectedClass.toUpperCase()}\n`;
+    // Tính toán số liệu thống kê thực tế
+    let total = studentsInClass.length;
+    let absentCount = 0;
+    let presentCount = 0;
+    let absentDetailsText = "";
     let count = 1;
-    let hasAbsent = false;
 
     studentsInClass.forEach(student => {
         const saved = localData[student.id] || { status: "dihoc", note: "" };
         if (saved.status === "vang") {
-            hasAbsent = true;
+            absentCount++;
             let noteText = saved.note ? `(${saved.note})` : "(Không ghi chú)";
-            textToCopy += `${count}. ${student.ten} ${noteText}\n`;
+            absentDetailsText += `${count}. ${student.ten} ${noteText}\n`;
             count++;
+        } else {
+            presentCount++;
         }
     });
 
-    if (!hasAbsent) {
+    // Tạo chuỗi nội dung copy hoàn chỉnh bao gồm sĩ số
+    let textToCopy = `
+ LỚP ${selectedClass.toUpperCase()}\n`;
+    textToCopy += `📊 Sĩ số: ${total} | Đi học: ${presentCount} | Vắng: ${absentCount}\n`;
+    textToCopy += `-------------------------------\n`;
+    textToCopy += `📝 DANH SÁCH VẮNG:\n`;
+
+    if (absentCount === 0) {
         textToCopy += `Hôm nay lớp đi học đầy đủ, không có học sinh vắng.`;
+    } else {
+        textToCopy += absentDetailsText;
     }
 
-    // Tiến hành copy vào clipboard
+    // Sao chép vào bộ nhớ tạm
     navigator.clipboard.writeText(textToCopy).then(() => {
         const btnCopy = document.getElementById('btnCopy');
         const oldText = btnCopy.innerText;
-        btnCopy.innerText = "✓ Đã copy thành công!";
+        btnCopy.innerText = "✓ Đã copy báo cáo!";
         btnCopy.style.backgroundColor = "#22c55e";
         
-        // Trả lại trạng thái nút ban đầu sau 2 giây
         setTimeout(() => {
             btnCopy.innerText = oldText;
             btnCopy.style.backgroundColor = "#4f46e5";
@@ -486,4 +498,5 @@ window.onload = renderStudents;
 </script>
 
 </body>
-</html>
+                </html>
+                
