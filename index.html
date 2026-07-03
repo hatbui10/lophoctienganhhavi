@@ -25,8 +25,6 @@
             color: #1a365d;
             text-transform: uppercase;
         }
-        
-        /* Bộ lọc tìm kiếm */
         .filter-container {
             background-color: #fff;
             padding: 6px;
@@ -45,11 +43,8 @@
             border-radius: 4px;
             outline: none;
         }
-        .search-input:focus {
-            border-color: #3b82f6;
-        }
+        .search-input:focus { border-color: #3b82f6; }
 
-        /* Hộp (Card) học sinh */
         .student-card {
             background: #fff;
             margin-bottom: 6px;
@@ -59,19 +54,9 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.02);
             box-sizing: border-box;
         }
-        
-        .card-row {
-            margin-bottom: 5px;
-        }
-        .card-row:last-child {
-            margin-bottom: 0;
-        }
-
-        .student-name {
-            font-size: 13px;
-            font-weight: 600;
-            color: #1e293b;
-        }
+        .card-row { margin-bottom: 5px; }
+        .card-row:last-child { margin-bottom: 0; }
+        .student-name { font-size: 13px; font-weight: 600; color: #1e293b; }
         
         .select-box {
             width: 100%;
@@ -83,7 +68,6 @@
             color: #334155;
             outline: none;
         }
-
         .btn-call {
             display: block;
             background-color: #22c55e;
@@ -96,18 +80,17 @@
             text-align: center;
             box-sizing: border-box;
         }
-        .btn-call:active {
-            background-color: #16a34a;
+        .btn-call:active { background-color: #16a34a; }
+        
+        /* Màu nút khi học sinh không có số điện thoại */
+        .btn-no-phone {
+            background-color: #cbd5e1;
+            color: #64748b;
+            pointer-events: none;
         }
 
-        /* Hiệu ứng bôi đỏ */
-        .highlight-red {
-            background-color: #fee2e2 !important;
-            border-color: #fca5a5 !important;
-        }
-        .highlight-red .student-name {
-            color: #991b1b;
-        }
+        .highlight-red { background-color: #fee2e2 !important; border-color: #fca5a5 !important; }
+        .highlight-red .student-name { color: #991b1b; }
     </style>
 </head>
 <body>
@@ -120,58 +103,39 @@
         <input type="tel" id="phoneSearch" class="search-input" placeholder="Tìm theo số ĐT..." onkeyup="filterStudents()">
     </div>
 
-    <div id="student-list">
-        
-        <div class="student-card" data-id="hs1">
-            <div class="card-row student-name" data-name="Nguyễn Văn A">1. Nguyễn Văn A</div>
-            <div class="card-row">
-                <select class="select-box select-class" onchange="saveData('hs1', 'class', this.value)"></select>
-            </div>
-            <div class="card-row">
-                <a href="tel:0901234567" class="btn-call" data-phone="0901234567">📞 Gọi: 0901234567</a>
-            </div>
-            <div class="card-row">
-                <select class="select-box select-note" onchange="checkNote(this); saveData('hs1', 'note', this.value)"></select>
-            </div>
-        </div>
-
-        <div class="student-card" data-id="hs2">
-            <div class="card-row student-name" data-name="Trần Thị B">2. Trần Thị B</div>
-            <div class="card-row">
-                <select class="select-box select-class" onchange="saveData('hs2', 'class', this.value)"></select>
-            </div>
-            <div class="card-row">
-                <a href="tel:0912345678" class="btn-call" data-phone="0912345678">📞 Gọi: 0912345678</a>
-            </div>
-            <div class="card-row">
-                <select class="select-box select-note" onchange="checkNote(this); saveData('hs2', 'note', this.value)"></select>
-            </div>
-        </div>
-
-        <div class="student-card" data-id="hs3">
-            <div class="card-row student-name" data-name="Lê Hoàng C">3. Lê Hoàng C</div>
-            <div class="card-row">
-                <select class="select-box select-class" onchange="saveData('hs3', 'class', this.value)"></select>
-            </div>
-            <div class="card-row">
-                <a href="tel:0983456789" class="btn-call" data-phone="0983456789">📞 Gọi: 0983456789</a>
-            </div>
-            <div class="card-row">
-                <select class="select-box select-note" onchange="checkNote(this); saveData('hs3', 'note', this.value)"></select>
-            </div>
-        </div>
-
-    </div>
+    <div id="student-list"></div>
 </div>
 
 <script>
+// ==========================================
+// KHU VỰC 1: DỮ LIỆU GỐC CỦA BẠN (DÙNG TEN VÀ SDT)
+// ==========================================
+const dataHocSinh = {
+    "SKY-KID": [
+        { id: "hs_SKY-KID_01", ten: "Nguyễn An Nhiên (Bơ)", sdt: "0396963955" },
+        { id: "hs_SKY-KID_02", ten: "Nguyễn Trung Đức (Bon)", sdt: "0339804981" },
+        { id: "hs_SKY-KID_03", ten: "Đặng Đình Bách", sdt: "0904511462" },
+        { id: "hs_SKY-KID_04", ten: "Lâm Duy Anh", sdt: "0902239258" },
+        { id: "hs_SKY-KID_05", ten: "Vũ Nguyễn Hải Anh 23/11/20", sdt: "0336076895" },
+        { id: "hs_SKY-KID_06", ten: "Lan Anh em Tuấn Anh B", sdt: "KhôngcóSĐT" },
+        { id: "hs_SKY-KID_07", ten: "Đặng Khánh Ngân", sdt: "0942093566" },
+        { id: "hs_SKY-KID_08", ten: "Trần Lê Tuệ Linh", sdt: "0988742202" },
+        { id: "hs_SKY-KID_09", ten: "Nguyễn Trâm Anh", sdt: "0919403848" },
+        { id: "hs_SKY-KID_10", ten: "Nguyễn Tú Anh", sdt: "0919403848" },
+        { id: "hs_SKY-KID_11", ten: "Nguyễn Hà My", sdt: "0943681990" },
+        { id: "hs_SKY-KID_12", ten: "Hoàng Ngọc Phương Linh", sdt: "0912731673" }
+    ]
+};
+
+// 2. Dropdown lớp học dùng chung (Dòng 2)
 const classOptions = [
     { value: "", text: "-- Chọn lớp học --" },
+    { value: "SKY-KID", text: "Lớp SKY-KID" },
     { value: "10A1", text: "Lớp 10A1" },
-    { value: "11B2", text: "Lớp 11B2" },
-    { value: "12C3", text: "Lớp 12C3" }
+    { value: "11B2", text: "Lớp 11B2" }
 ];
 
+// 3. Dropdown ghi chú dùng chung (Dòng 4)
 const noteOptions = [
     { value: "", text: "-- Chọn ghi chú trạng thái --" },
     { value: "nghi", text: "Nghỉ hết tháng 7" },
@@ -180,76 +144,72 @@ const noteOptions = [
     { value: "chu-y", text: "Cần chú ý đặc biệt" }
 ];
 
-// Hàm tìm kiếm tên và số điện thoại
-function filterStudents() {
-    const nameKeyword = document.getElementById('nameSearch').value.toLowerCase().trim();
-    const phoneKeyword = document.getElementById('phoneSearch').value.trim();
-    const cards = document.querySelectorAll('.student-card');
-
-    cards.forEach(card => {
-        const nameElement = card.querySelector('.student-name');
-        const phoneAnchor = card.querySelector('.btn-call');
-        let isNameMatch = nameElement ? nameElement.getAttribute('data-name').toLowerCase().includes(nameKeyword) : true;
-        let isPhoneMatch = phoneAnchor ? phoneAnchor.getAttribute('data-phone').includes(phoneKeyword) : true;
-
-        card.style.display = (isNameMatch && isPhoneMatch) ? "" : "none";
-    });
-}
-
-// Lưu dữ liệu vào localStorage
-function saveData(studentId, field, value) {
-    // Đọc dữ liệu cũ hoặc tạo object mới nếu chưa có
+// Hàm tự sinh giao diện dạng Hộp cho 4 dòng đúng cấu trúc data của bạn
+function renderStudents() {
+    const listContainer = document.getElementById('student-list');
     let localData = JSON.parse(localStorage.getItem('studentApp_data')) || {};
     
-    if (!localData[studentId]) {
-        localData[studentId] = { class: "", note: "" };
+    listContainer.innerHTML = "";
+    let count = 1;
+
+    for (const className in dataHocSinh) {
+        dataHocSinh[className].forEach(student => {
+            const storageId = student.id; // Dùng id gốc (Ví dụ: hs_SKY-KID_01) để làm key localStorage
+            const saved = localData[storageId] || { class: "", note: "" };
+
+            const card = document.createElement('div');
+            card.className = "student-card";
+            card.setAttribute('data-id', storageId);
+
+            // Xử lý nút gọi dựa trên thuộc tính `sdt` của bạn
+            let isNoPhone = student.sdt.includes("KhôngcóSĐT") || student.sdt === "";
+            let buttonHTML = isNoPhone 
+                ? `<span class="btn-call btn-no-phone">🚫 Không có số điện thoại</span>`
+                : `<a href="tel:${student.sdt}" class="btn-call" data-phone="${student.sdt}">📞 Gọi: ${student.sdt}</a>`;
+
+            // Giao diện 4 dòng hoàn chỉnh: Tên (Dòng 1) -> Chọn lớp (Dòng 2) -> Gọi (Dòng 3) -> Ghi chú (Dòng 4)
+            let cardHTML = `
+                <div class="card-row student-name" data-name="${student.ten}">${count}. ${student.ten}</div>
+                <div class="card-row">
+                    <select class="select-box select-class" onchange="saveData('${storageId}', 'class', this.value)">
+                        ${classOptions.map(opt => `<option value="${opt.value}" ${opt.value === saved.class ? 'selected' : ''}>${opt.text}</option>`).join('')}
+                    </select>
+                </div>
+                <div class="card-row">
+                    ${buttonHTML}
+                </div>
+                <div class="card-row">
+                    <select class="select-box select-note" onchange="checkNote(this); saveData('${storageId}', 'note', this.value)">
+                        ${noteOptions.map(opt => `<option value="${opt.value}" ${opt.value === saved.note ? 'selected' : ''}>${opt.text}</option>`).join('')}
+                    </select>
+                </div>
+            `;
+
+            card.innerHTML = cardHTML;
+            listContainer.appendChild(card);
+
+            // Đồng bộ lại hiệu ứng màu đỏ nếu dữ liệu cũ ghi nhận là 'nghi'
+            const noteSelect = card.querySelector('.select-note');
+            if (noteSelect && noteSelect.value === 'nghi') {
+                card.classList.add('highlight-red');
+            }
+
+            count++;
+        });
     }
-    
-    // Cập nhật trường dữ liệu thay đổi
-    localData[studentId][field] = value;
-    
-    // Lưu lại vào bộ nhớ máy
+}
+
+// Lưu trạng thái dropdown vào localStorage
+function saveData(storageId, field, value) {
+    let localData = JSON.parse(localStorage.getItem('studentApp_data')) || {};
+    if (!localData[storageId]) {
+        localData[storageId] = { class: "", note: "" };
+    }
+    localData[storageId][field] = value;
     localStorage.setItem('studentApp_data', JSON.stringify(localData));
 }
 
-// Hàm khởi tạo nạp Dropdown và khôi phục dữ liệu đã lưu
-function initApp() {
-    let localData = JSON.parse(localStorage.getItem('studentApp_data')) || {};
-
-    const cards = document.querySelectorAll('.student-card');
-    cards.forEach(card => {
-        const studentId = card.getAttribute('data-id');
-        const studentSavedData = localData[studentId] || { class: "", note: "" };
-
-        // 1. Nạp và khôi phục Dropdown Lớp
-        const classSelect = card.querySelector('.select-class');
-        if (classSelect && classSelect.children.length === 0) {
-            classOptions.forEach(opt => {
-                const option = document.createElement('option');
-                option.value = opt.value;
-                option.textContent = opt.text;
-                if (opt.value === studentSavedData.class) option.selected = true;
-                classSelect.appendChild(option);
-            });
-        }
-
-        // 2. Nạp và khôi phục Dropdown Ghi chú
-        const noteSelect = card.querySelector('.select-note');
-        if (noteSelect && noteSelect.children.length === 0) {
-            noteOptions.forEach(opt => {
-                const option = document.createElement('option');
-                option.value = opt.value;
-                option.textContent = opt.text;
-                if (opt.value === studentSavedData.note) option.selected = true;
-                noteSelect.appendChild(option);
-            });
-            // Kiểm tra bôi đỏ ngay từ lúc tải trang nếu trạng thái cũ lưu là 'nghi'
-            checkNote(noteSelect);
-        }
-    });
-}
-
-// Hàm kiểm tra bôi đỏ hộp
+// Kiểm tra bôi đỏ
 function checkNote(selectElement) {
     var card = selectElement.closest('.student-card');
     if (selectElement.value === 'nghi') {
@@ -259,8 +219,32 @@ function checkNote(selectElement) {
     }
 }
 
-// Chạy ứng dụng khi mở trang
-window.onload = initApp;
+// Lọc tìm kiếm Họ tên & Số điện thoại
+function filterStudents() {
+    const nameKeyword = document.getElementById('nameSearch').value.toLowerCase().trim();
+    const phoneKeyword = document.getElementById('phoneSearch').value.trim();
+    const cards = document.querySelectorAll('.student-card');
+
+    cards.forEach(card => {
+        const nameElement = card.querySelector('.student-name');
+        const phoneAnchor = card.querySelector('.btn-call[data-phone]');
+        
+        let isNameMatch = nameElement ? nameElement.getAttribute('data-name').toLowerCase().includes(nameKeyword) : true;
+        let isPhoneMatch = true;
+        
+        if (phoneKeyword !== "") {
+            if (phoneAnchor) {
+                isPhoneMatch = phoneAnchor.getAttribute('data-phone').includes(phoneKeyword);
+            } else {
+                isPhoneMatch = false;
+            }
+        }
+
+        card.style.display = (isNameMatch && isPhoneMatch) ? "" : "none";
+    });
+}
+
+window.onload = renderStudents;
 </script>
 
 </body>
