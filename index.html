@@ -1,92 +1,98 @@
 <!DOCTYPE html>
 <html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lớp học Tiếng Anh Hà Vi</title>
-    <style>
-        body {
-            background: #0f172a;
-            min-height: 100vh;
-            font-family: 'Segoe UI', sans-serif;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: white;
-        }
 
-        .header { text-align: center; margin-top: 50px; margin-bottom: 30px; }
-        .header h1 {
-            font-size: 2.8rem;
-            color: #f8fafc;
-            text-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
-        }
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Lớp học Tiếng Anh Hà Vi</title>
+        <style>
+            body {
+                background: #0f172a;
+                min-height: 100vh;
+                font-family: 'Segoe UI', sans-serif;
+                margin: 0;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                color: white;
+            }
+            
+            .header { text-align: center; margin-top: 50px; margin-bottom: 30px; }
+            .header h1 {
+                font-size: 2.8rem;
+                color: #f8fafc;
+                text-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+            }
+            
+            .menu-dashboard {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+                gap: 25px;
+                max-width: 950px;
+                width: 90%;
+                padding: 40px;
+            }
+            
+            /* Nút với đường viền nổi bật */
+            .menu-btn {
+                background: #1e293b;
+                /* ĐƯỜNG VIỀN NỔI BẬT */
+                border: 2px solid #3b82f6; 
+                color: #ffffff;
+                padding: 22px;
+                border-radius: 12px;
+                font-weight: bold;
+                text-decoration: none;
+                text-align: center;
+                font-size: 1.1rem;
+                transition: all 0.3s ease;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            }
+            
+            /* HIỆU ỨNG KHI DI CHUỘT VÀO */
+            .menu-btn:hover {
+                background: #1e293b;
+                border-color: #f59e0b; /* Đổi sang màu vàng cam khi hover */
+                color: #f59e0b;
+                transform: translateY(-8px);
+                box-shadow: 0 10px 25px rgba(245, 158, 11, 0.3);
+            }
+            
+            .menu-btn span { font-size: 1.8rem; }
+        </style>
+    </head>
 
-        .menu-dashboard {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 25px;
-            max-width: 950px;
-            width: 90%;
-            padding: 40px;
-        }
+    <body>
 
-        /* Nút với đường viền nổi bật */
-        .menu-btn {
-            background: #1e293b;
-            /* ĐƯỜNG VIỀN NỔI BẬT */
-            border: 2px solid #3b82f6; 
-            color: #ffffff;
-            padding: 22px;
-            border-radius: 12px;
-            font-weight: bold;
-            text-decoration: none;
-            text-align: center;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        }
+        <div class="header">
+            <h1>Lớp học Tiếng Anh Hà Vi</h1>
+        </div>
 
-        /* HIỆU ỨNG KHI DI CHUỘT VÀO */
-        .menu-btn:hover {
-            background: #1e293b;
-            border-color: #f59e0b; /* Đổi sang màu vàng cam khi hover */
-            color: #f59e0b;
-            transform: translateY(-8px);
-            box-shadow: 0 10px 25px rgba(245, 158, 11, 0.3);
-        }
+        <div class="menu-dashboard">
+            <a href="https://hatbui10.github.io/diemdanh/" target="_blank" class="menu-btn">
+                <span>📝</span> Điểm danh
+            </a>
 
-        .menu-btn span { font-size: 1.8rem; }
-    </style>
-</head>
-<body>
+            <a href="https://hatbui10.github.io/danhgiahocsinhhavi/" target="_blank" class="menu-btn">
+                <span>⭐</span> Đánh giá học sinh
+            </a>
 
-    <div class="header">
-        <h1>Lớp học Tiếng Anh Hà Vi</h1>
-    </div>
+            <a href="https://hatbui10.github.io/xeplich/" target="_blank" class="menu-btn">
+                <span>📅</span> Lịch học
+            </a>
+            <a href="https://hatbui10.github.io/lichnghihavi/" target="_blank" class="menu-btn">
+                <span>📅</span> Lịch nghỉ
+            </a>
 
-    <div class="menu-dashboard">
-        <a href="https://hatbui10.github.io/diemdanh/" target="_blank" class="menu-btn">
-            <span>📝</span> Điểm danh
-        </a>
-        
-        <a href="https://hatbui10.github.io/danhgiahocsinhhavi/" target="_blank" class="menu-btn">
-            <span>⭐</span> Đánh giá học sinh
-        </a>
-        
-        <a href="https://hatbui10.github.io/xeplich/" target="_blank" class="menu-btn">
-            <span>📅</span> Lịch học
-        </a>
-        
-        <a href="https://hatbui10.github.io/dsgiaovien/" target="_blank" class="menu-btn">
-            <span>👩‍🏫</span> Danh sách giáo viên
-        </a>
-    </div>
+            <a href="https://hatbui10.github.io/dsgiaovien/" target="_blank" class="menu-btn">
+                <span>👩‍🏫</span> Danh sách giáo viên
+            </a>
+        </div>
 
-</body>
+    </body>
+
 </html>
